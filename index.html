@@ -444,15 +444,14 @@
                 constructor() {
                     super(TILE_SIZE * 4.5, CANVAS_HEIGHT - TILE_SIZE * 2, DIR.UP, '#4ade80', 3);
                     this.reloadMax = 20;
-                    this.invincible = 90; // Start with brief invincibility
-                    this.respawn();
+                    this.invincible = 60; // 1 second invincibility at start
                 }
 
                 respawn() {
                     this.x = TILE_SIZE * 4.5;
                     this.y = CANVAS_HEIGHT - TILE_SIZE * 2;
                     this.dir = DIR.UP;
-                    this.invincible = 90;
+                    this.invincible = 120; // 2 seconds invincibility after death
                     this.active = true;
                 }
             }
@@ -643,9 +642,13 @@
                 enemySpawnTimer = 0;
                 enemiesRemaining = enemiesPerLevel;
                 enemiesSpawned = 0;
-                spawnDelay = 60;
+                spawnDelay = 30; // Faster initial spawn
                 updateUI();
                 gameOverOverlay.classList.remove('active');
+
+                // Pre-spawn 2 enemies for immediate action
+                spawnEnemy();
+                spawnEnemy();
             }
 
             function spawnEnemy() {
@@ -837,8 +840,8 @@
 
             function drawTank(tank) {
                 if (!tank.active) return;
-                if (tank.flashTimer % 4 < 2) return; // Flash effect
-                if (tank.invincible > 0 && tank.invincible % 6 < 3) return; // Invincibility blink
+                if (tank.flashTimer > 0 && tank.flashTimer % 4 < 2) return; // Flash effect (only when hit)
+                if (tank.invincible > 0 && tank.invincible % 6 < 3 && tank instanceof Player) return; // Player invincibility blink
 
                 ctx.save();
                 ctx.translate(tank.getCenterX(), tank.getCenterY());
