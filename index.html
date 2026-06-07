@@ -125,10 +125,10 @@
             background: var(--accent);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 16px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 0.9em;
             font-weight: bold;
             letter-spacing: 1px;
             transition: all 0.2s;
@@ -136,13 +136,71 @@
         }
 
         .btn:hover {
-            background: #ff5a7a;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(233, 68, 96, 0.4);
         }
 
+        .btn-select {
+            background: #7c3aed;
+        }
+        .btn-select:hover {
+            background: #8b5cf6;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-pause {
+            background: #0891b2;
+        }
+        .btn-pause:hover {
+            background: #06b6d4;
+            box-shadow: 0 4px 12px rgba(8, 145, 178, 0.4);
+        }
+
+        .btn-restart {
+            background: var(--accent);
+        }
+        .btn-restart:hover {
+            background: #ff5a7a;
+        }
+
         .btn:active {
             transform: translateY(0);
+        }
+
+        .pause-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: white;
+            z-index: 9;
+        }
+
+        .pause-overlay.active {
+            display: flex;
+        }
+
+        .pause-icon {
+            font-size: 3em;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .pause-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #f5c518;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
         }
 
         .game-over-overlay {
@@ -170,6 +228,94 @@
         .game-over-overlay .sub {
             font-size: 0.5em;
             opacity: 0.7;
+        }
+
+        .level-select-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.92);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 11;
+            padding: 20px;
+        }
+
+        .level-select-overlay.active {
+            display: flex;
+        }
+
+        .level-select-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #f5c518;
+            text-shadow: 0 0 20px rgba(245, 197, 24, 0.5);
+        }
+
+        .level-select-sub {
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: -10px;
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .level-btn {
+            background: linear-gradient(135deg, #1e3a5f, #16213e);
+            color: #e0e0e0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 14px 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .level-btn:hover,
+        .level-btn.focused {
+            border-color: #f5c518;
+            color: #f5c518;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(245, 197, 24, 0.3);
+            background: linear-gradient(135deg, #2a4a7f, #1e3050);
+        }
+
+        .level-btn .lv-num {
+            font-size: 1.4em;
+            display: block;
+        }
+
+        .level-btn .lv-name {
+            font-size: 0.7em;
+            opacity: 0.7;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .level-btn.easy {
+            border-color: rgba(74, 222, 128, 0.4);
+        }
+        .level-btn.medium {
+            border-color: rgba(250, 204, 21, 0.4);
+        }
+        .level-btn.hard {
+            border-color: rgba(248, 113, 113, 0.4);
+        }
+        .level-btn.expert {
+            border-color: rgba(167, 139, 250, 0.4);
         }
 
         @media (max-width: 900px) {
@@ -216,11 +362,14 @@
                 <span class="stat-label">❤️ 生命</span>
                 <div class="lives-container" id="livesContainer"></div>
             </div>
-            <button class="btn" id="restartBtn" onclick="restartGame()">🔄 重新开始</button>
+            <button class="btn btn-select" id="selectLevelBtn">📋 选择关卡</button>
+            <button class="btn btn-pause" id="pauseBtn">⏯️ 暂停 / 继续</button>
+            <button class="btn btn-restart" id="restartBtn">🔄 重新开始</button>
             <div class="controls">
                 <strong>操作说明:</strong><br>
-                <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> 移动<br>
+                <kbd>↑↓←→</kbd> / <kbd>WASD</kbd> 移动<br>
                 <kbd>空格</kbd> 发射子弹<br>
+                <kbd>ESC</kbd> / <kbd>P</kbd> 暂停<br>
                 <kbd>R</kbd> 重新开始
             </div>
         </div>
@@ -231,6 +380,16 @@
             <div class="game-over-overlay" id="gameOverOverlay">
                 <div id="gameOverTitle">GAME OVER</div>
                 <div class="sub">按 R 键重新开始</div>
+            </div>
+            <div class="pause-overlay" id="pauseOverlay">
+                <div class="pause-icon">⏸️</div>
+                <div class="pause-text">游戏暂停</div>
+                <div class="sub">按 ESC 或 P 键继续</div>
+            </div>
+            <div class="level-select-overlay" id="levelSelectOverlay">
+                <div class="level-select-title">🎮 选择关卡</div>
+                <div class="level-select-sub">方向键选择 · 空格/回车确认 · ESC返回</div>
+                <div class="level-grid" id="levelGrid"></div>
             </div>
         </div>
     </div>
@@ -257,6 +416,12 @@
             const livesContainer = document.getElementById('livesContainer');
             const gameOverOverlay = document.getElementById('gameOverOverlay');
             const gameOverTitle = document.getElementById('gameOverTitle');
+            const levelSelectOverlay = document.getElementById('levelSelectOverlay');
+            const levelGrid = document.getElementById('levelGrid');
+            const pauseOverlay = document.getElementById('pauseOverlay');
+            const selectLevelBtn = document.getElementById('selectLevelBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const restartBtn = document.getElementById('restartBtn');
 
             // Directions
             const DIR = { UP: 0, RIGHT: 1, DOWN: 2, LEFT: 3 };
@@ -275,7 +440,7 @@
             let player = null;
             let enemies = [];
             let bullets = [];
-            let walls = [];
+            let walls = Array.from({length: ROWS}, () => Array(COLS).fill(0));
             let particles = [];
             let gameOver = false;
             let gamePaused = false;
@@ -288,82 +453,276 @@
             let keys = {};
             let animationId = null;
 
+            // Level select keyboard navigation
+            let selectedLevelIndex = 0;
+            const LEVEL_COLS = 5;
+            const LEVEL_ROWS = 2;
+
+            function focusLevelButton(index) {
+                const buttons = levelGrid.querySelectorAll('.level-btn');
+                buttons.forEach(b => b.classList.remove('focused'));
+                if (buttons[index]) {
+                    buttons[index].classList.add('focused');
+                    selectedLevelIndex = index;
+                }
+            }
+
             // Level map definitions (0=empty, 1=brick, 2=steel, 3=water, 4=forest)
-            const LEVEL_MAPS = [
-                // Level 1 - Classic layout
+            const ALL_MAPS = [
+                // Level 1 - 训练场 (Training Ground)
                 [
                     "00000000000000000000000000",
                     "00000000000000000000000000",
-                    "01100000110000011000001100",
-                    "01000000100000010000001000",
-                    "01111111101100111011111000",
-                    "00000000100000010000000000",
-                    "00000000111111110000000000",
-                    "00000000000000000000000000",
-                    "00000111110000111111000000",
-                    "00000100000000000001000000",
-                    "00000100001100110001000000",
-                    "01111100001000010001111110",
-                    "00000100001000010001000000",
-                    "00000100001100110001000000",
-                    "00000111110000111111000000",
-                    "00000000000000000000000000",
-                    "00000000002000020000000000",
-                    "00000000002000020000000000",
-                    "00000000000000000000000000",
-                    "00000000000000000000000000",
-                ],
-                // Level 2 - More steel walls
-                [
                     "00000000000000000000000000",
                     "00000110000000000110000000",
+                    "00000100000000000100000000",
                     "00000100001100110001000000",
-                    "01100102200110010220011000",
-                    "01000100000000000010001000",
-                    "01000111110001111100010000",
-                    "01000000000000000000010000",
-                    "01000001100000110000010000",
-                    "01111001100000110001111000",
-                    "00000000001111000000000000",
-                    "00000000001001000000000000",
-                    "01111000001001000001111000",
-                    "01000110001001000110001000",
-                    "01000011000000000110001000",
-                    "01000000111111111000001000",
-                    "01100000000000000000011000",
-                    "00000002000000000200000000",
+                    "00000111110000011111000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000111100000011110000000",
+                    "00000100000000000100000000",
+                    "00000100001100110001000000",
+                    "00000111110000111111000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
                     "00000000000000000000000000",
                     "00000000000000000000000000",
                     "00000000000000000000000000",
                 ],
-                // Level 3 - Forest and water
+                // Level 2 - 十字路口 (Crossroads)
                 [
                     "00000000000000000000000000",
-                    "01111100000000000011111000",
-                    "01000100001111000010001000",
-                    "01000100001001000010001000",
-                    "01000111101001011110001000",
-                    "01000000000000000000001000",
-                    "01111001111111110011110000",
-                    "00001001000000000100100000",
-                    "00001001002220010010000000",
-                    "01111001000000010010111100",
-                    "01000001111111110000001000",
-                    "01000000000000000000001000",
-                    "01001100000000000011001000",
-                    "01001000001111000001001000",
-                    "01001000001001000001001000",
+                    "00001100000000000011000000",
+                    "00001000000000000010000000",
+                    "00001000001100110001000000",
                     "01111000001001000001111000",
-                    "00000000001001000000000000",
-                    "00000002000000000200000000",
+                    "01000000001001000000001000",
+                    "01000001111001111000001000",
+                    "00000001000000001000000000",
+                    "00000001000000001000000000",
+                    "01111001000000001001111000",
+                    "01000001111001111000001000",
+                    "01000000001001000000001000",
+                    "01111000001001000001111000",
+                    "00001000001100110001000000",
+                    "00001000000000000010000000",
+                    "00001100000000000011000000",
                     "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                ],
+                // Level 3 - 钢铁堡垒 (Steel Fortress)
+                [
+                    "00000000000000000000000000",
+                    "00000001100000011000000000",
+                    "00000001000000001000000000",
+                    "01100001001100100100001100",
+                    "01000001111100111110000010",
+                    "01000000000000000000000010",
+                    "01111000000000000000011110",
+                    "00000000222200222200000000",
+                    "00000000200000200000000000",
+                    "01111000200000200000011110",
+                    "01000000222200222200000010",
+                    "01000000000000000000000010",
+                    "01100001111100111110000010",
+                    "00000001001100100100001100",
+                    "00000001000000001000000000",
+                    "00000001100000011000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                ],
+                // Level 4 - 迷宫 (Maze)
+                [
+                    "00000000000000000000000000",
+                    "01111000000000000001111000",
+                    "01001000001100110001001000",
+                    "01001000001001000001001000",
+                    "01001111001001001111001000",
+                    "01000001000000001000001000",
+                    "01111001001100100101111000",
+                    "00000001001001000100000000",
+                    "00000001001001000100000000",
+                    "01111001001100100101111000",
+                    "01000001000000001000001000",
+                    "01001111001001001111001000",
+                    "01001000001001000001001000",
+                    "01001000001100110001001000",
+                    "01111000000000000001111000",
+                    "00000000002000020000000000",
+                    "00000000002000020000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                ],
+                // Level 5 - 双塔 (Twin Towers)
+                [
+                    "00000000000000000000000000",
+                    "00000011000000001100000000",
+                    "00000010000000000100000000",
+                    "01111011110011111011110000",
+                    "01000000000000000000001000",
+                    "01000001100000110000001000",
+                    "01000001000000100000001000",
+                    "01111001000000100001111000",
+                    "00000001002220100000000000",
+                    "01111001000000100001111000",
+                    "01000001000000100000001000",
+                    "01000001100000110000001000",
+                    "01000000000000000000001000",
+                    "01111011110011111011110000",
+                    "00000010000000000100000000",
+                    "00000011000000001100000000",
+                    "00000000000000000000000000",
+                    "00000000002000020000000000",
+                    "00000000002000020000000000",
+                    "00000000000000000000000000",
+                ],
+                // Level 6 - 要塞 (Stronghold)
+                [
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "01111002200000002201111000",
+                    "01000002200000002200001000",
+                    "01000000001100110000001000",
+                    "01000011111001111100001000",
+                    "01000010000000001000001000",
+                    "01111010001100010111110000",
+                    "00000010001000100000000000",
+                    "01111010001100010111110000",
+                    "01000010000000001000001000",
+                    "01000011111001111100001000",
+                    "01000000001100110000001000",
+                    "01000002200000002200001000",
+                    "01111002200000002201111000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000002000000002000000000",
+                    "00000002000000002000000000",
+                    "00000000000000000000000000",
+                ],
+                // Level 7 - 走廊 (Corridors)
+                [
+                    "00000000000000000000000000",
+                    "01111110000000000111111000",
+                    "01000010000000000100001000",
+                    "01000010001100010100001000",
+                    "01000011111001111100001000",
+                    "01000000000000000000001000",
+                    "01100000000000000000011000",
+                    "00100002200000220000100000",
+                    "00100002000000200000100000",
+                    "00100002200000220000100000",
+                    "01100000000000000000011000",
+                    "01000000000000000000001000",
+                    "01000011111001111100001000",
+                    "01000010001100010100001000",
+                    "01000010000000000100001000",
+                    "01111110000000000111111000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                ],
+                // Level 8 - 钢铁丛林 (Steel Jungle)
+                [
+                    "00000000000000000000000000",
+                    "01100110000000000110011000",
+                    "01000100001100110001000100",
+                    "01000102201001002201000100",
+                    "01111102201001002201111100",
+                    "00000000001001000000000000",
+                    "00001100001001000011000000",
+                    "00001000002220000010000000",
+                    "00001000002020000010000000",
+                    "00001000002220000010000000",
+                    "00001100001001000011000000",
+                    "00000000001001000000000000",
+                    "01111100001001000011111000",
+                    "01000102200000022010001000",
+                    "01000100001100110001000100",
+                    "01100110000000000110011000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                ],
+                // Level 9 - 末日堡垒 (Fortress Doom)
+                [
+                    "00000000000000000000000000",
+                    "01111110000000000111111000",
+                    "01000010001100110001000010",
+                    "01000010001001000100000100",
+                    "01000011111001001111000100",
+                    "01000000000000000000000100",
+                    "01111000000000000000011110",
+                    "00000022220000222200000000",
+                    "00000020020000200200000000",
+                    "00000022220000222200000000",
+                    "01111000000000000000011110",
+                    "01000000000000000000000100",
+                    "01000011111001001111000100",
+                    "01000010001001000100000100",
+                    "01000010001100110001000010",
+                    "01111110000000000111111000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                    "00000000000000000000000000",
+                ],
+                // Level 10 - 终极挑战 (Ultimate Challenge)
+                [
+                    "00000000000000000000000000",
+                    "01111111100000011111111000",
+                    "01000000100000010000001000",
+                    "01000200101100100100201000",
+                    "01000200101001000100201000",
+                    "01000000101001000100001000",
+                    "01111111101001011111111000",
+                    "00000000002220000000000000",
+                    "00000000022022000000000000",
+                    "00000000002220000000000000",
+                    "01111111101001011111111000",
+                    "01000000101001000100001000",
+                    "01000200101001000100201000",
+                    "01000200101100100100201000",
+                    "01000000100000010000001000",
+                    "01111111100000011111111000",
+                    "00000000000000000000000000",
+                    "00000000002000020000000000",
+                    "00000000002000020000000000",
                     "00000000000000000000000000",
                 ],
             ];
 
+            // Per-level difficulty configuration
+            const LEVEL_CONFIG = [
+                // {enemies, maxActive, minType, maxType, spawnDelay, name}
+                { enemies: 8,  maxActive: 2, minType: 0, maxType: 0, spawnDelay: 90, name: '训练场' },
+                { enemies: 10, maxActive: 3, minType: 0, maxType: 0, spawnDelay: 80, name: '十字路口' },
+                { enemies: 12, maxActive: 3, minType: 0, maxType: 1, spawnDelay: 75, name: '钢铁堡垒' },
+                { enemies: 15, maxActive: 3, minType: 0, maxType: 1, spawnDelay: 70, name: '迷宫' },
+                { enemies: 18, maxActive: 4, minType: 1, maxType: 2, spawnDelay: 65, name: '双塔' },
+                { enemies: 20, maxActive: 4, minType: 1, maxType: 2, spawnDelay: 60, name: '要塞' },
+                { enemies: 22, maxActive: 4, minType: 1, maxType: 3, spawnDelay: 55, name: '走廊' },
+                { enemies: 25, maxActive: 5, minType: 2, maxType: 3, spawnDelay: 50, name: '钢铁丛林' },
+                { enemies: 28, maxActive: 5, minType: 2, maxType: 3, spawnDelay: 45, name: '末日堡垒' },
+                { enemies: 32, maxActive: 6, minType: 2, maxType: 3, spawnDelay: 40, name: '终极挑战' },
+            ];
+
             function getLevelMap(lvl) {
-                const idx = (lvl - 1) % LEVEL_MAPS.length;
-                return LEVEL_MAPS[idx].map(row => row.split('').map(Number));
+                const idx = (lvl - 1) % ALL_MAPS.length;
+                return ALL_MAPS[idx].map(row => row.split('').map(Number));
+            }
+
+            function getLevelConfig(lvl) {
+                return LEVEL_CONFIG[(lvl - 1) % LEVEL_CONFIG.length];
             }
 
             // Tank base class
@@ -442,7 +801,7 @@
             // Player class
             class Player extends Tank {
                 constructor() {
-                    super(TILE_SIZE * 4.5, CANVAS_HEIGHT - TILE_SIZE * 2, DIR.UP, '#4ade80', 3);
+                    super(TILE_SIZE * 4.5, CANVAS_HEIGHT - TILE_SIZE * 2, DIR.UP, '#4ade80', 2);
                     this.reloadMax = 20;
                     this.invincible = 60; // 1 second invincibility at start
                 }
@@ -460,7 +819,7 @@
             class Enemy extends Tank {
                 constructor(x, y, type) {
                     const colors = ['#f87171', '#fb923c', '#facc15', '#a78bfa'];
-                    const speeds = [1.5, 2, 2.5, 1.8];
+                    const speeds = [1, 1.3, 1.6, 1.2];
                     const reloads = [60, 45, 35, 50];
                     const points = [100, 200, 300, 400];
                     const t = type % colors.length;
@@ -548,7 +907,7 @@
                     this.y = y;
                     this.dir = dir;
                     this.isPlayer = isPlayer;
-                    this.speed = isPlayer ? 6 : 4;
+                    this.speed = isPlayer ? 4 : 3;
                     this.width = 6;
                     this.height = 6;
                     this.active = true;
@@ -631,6 +990,7 @@
 
             // Initialize/reset game state
             function initGame() {
+                const cfg = getLevelConfig(level);
                 const map = getLevelMap(level);
                 walls = map.map(row => [...row]);
                 player = new Player();
@@ -640,15 +1000,21 @@
                 gameOver = false;
                 gamePaused = false;
                 enemySpawnTimer = 0;
-                enemiesRemaining = enemiesPerLevel;
+                enemiesPerLevel = cfg.enemies;
+                maxActiveEnemies = cfg.maxActive;
+                enemiesRemaining = cfg.enemies;
                 enemiesSpawned = 0;
-                spawnDelay = 30; // Faster initial spawn
+                spawnDelay = cfg.spawnDelay;
                 updateUI();
                 gameOverOverlay.classList.remove('active');
+                levelSelectOverlay.classList.remove('active');
+                pauseOverlay.classList.remove('active');
 
-                // Pre-spawn 2 enemies for immediate action
-                spawnEnemy();
-                spawnEnemy();
+                // Pre-spawn initial enemies for immediate action
+                const preSpawn = Math.min(2, cfg.maxActive);
+                for (let i = 0; i < preSpawn; i++) {
+                    spawnEnemy();
+                }
             }
 
             function spawnEnemy() {
@@ -659,7 +1025,9 @@
                 ];
 
                 const pt = spawnPoints[Math.floor(Math.random() * spawnPoints.length)];
-                const type = Math.min(Math.floor(level / 2), 3);
+                const cfg = getLevelConfig(level);
+                const typeRange = cfg.maxType - cfg.minType + 1;
+                const type = cfg.minType + Math.floor(Math.random() * typeRange);
                 const enemy = new Enemy(pt.x, pt.y, type);
 
                 // Check spawning area is clear
@@ -681,8 +1049,9 @@
             }
 
             function updateUI() {
+                const cfg = getLevelConfig(level);
                 scoreDisplay.textContent = score;
-                levelDisplay.textContent = level;
+                levelDisplay.textContent = `${level} - ${cfg.name}`;
                 killsDisplay.textContent = kills;
                 livesContainer.innerHTML = '';
                 for (let i = 0; i < lives; i++) {
@@ -747,19 +1116,25 @@
 
             function endGame(won) {
                 gameOver = true;
-                gameOverOverlay.classList.add('active');
-                gameOverTitle.textContent = won ? '🎉 你赢了!' : 'GAME OVER';
                 if (won) {
                     score += 1000;
                     updateUI();
+                    // After winning all 10 levels
+                    gameOverOverlay.classList.add('active');
+                    gameOverTitle.textContent = '🎉 恭喜通关!';
+                } else {
+                    gameOverOverlay.classList.add('active');
+                    gameOverTitle.textContent = 'GAME OVER';
                 }
             }
 
             function nextLevel() {
+                if (level >= 10) {
+                    endGame(true);
+                    return;
+                }
                 level++;
                 score += 500;
-                enemiesPerLevel = 20 + (level - 1) * 2;
-                maxActiveEnemies = Math.min(4 + Math.floor(level / 2), 6);
                 initGame();
             }
 
@@ -768,8 +1143,14 @@
                 level = 1;
                 kills = 0;
                 lives = 3;
-                enemiesPerLevel = 20;
-                maxActiveEnemies = 4;
+                initGame();
+            }
+
+            function selectLevel(lvl) {
+                score = 0;
+                level = lvl;
+                kills = 0;
+                lives = 3;
                 initGame();
             }
 
@@ -949,7 +1330,7 @@
                 }
 
                 // Draw player
-                if (player.active) {
+                if (player && player.active) {
                     drawTank(player);
                 }
 
@@ -958,10 +1339,12 @@
                     p.draw(ctx);
                 }
 
-                // Enemy remaining indicator
-                ctx.fillStyle = 'rgba(255,255,255,0.4)';
-                ctx.font = '12px "Microsoft YaHei", sans-serif';
-                ctx.fillText(`剩余敌人: ${enemiesRemaining + enemies.length}`, 8, CANVAS_HEIGHT - 8);
+                // Enemy remaining indicator (only during game)
+                if (!gameOver) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+                    ctx.font = '12px "Microsoft YaHei", sans-serif';
+                    ctx.fillText(`剩余敌人: ${enemiesRemaining + enemies.length}`, 8, CANVAS_HEIGHT - 8);
+                }
             }
 
             function update() {
@@ -1085,13 +1468,80 @@
 
             // Input handling
             window.addEventListener('keydown', (e) => {
-                keys[e.key] = true;
-
-                if (e.key === 'r' || e.key === 'R') {
-                    restartGame();
+                // Level select keyboard navigation
+                const inLevelSelect = levelSelectOverlay.classList.contains('active');
+                if (inLevelSelect) {
+                    if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
+                        e.preventDefault();
+                        const newIdx = selectedLevelIndex - LEVEL_COLS;
+                        if (newIdx >= 0) focusLevelButton(newIdx);
+                        return;
+                    }
+                    if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+                        e.preventDefault();
+                        const newIdx = selectedLevelIndex + LEVEL_COLS;
+                        if (newIdx < 10) focusLevelButton(newIdx);
+                        return;
+                    }
+                    if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                        e.preventDefault();
+                        const newIdx = selectedLevelIndex - 1;
+                        if (newIdx >= 0 && Math.floor(newIdx / LEVEL_COLS) === Math.floor(selectedLevelIndex / LEVEL_COLS)) {
+                            focusLevelButton(newIdx);
+                        }
+                        return;
+                    }
+                    if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                        e.preventDefault();
+                        const newIdx = selectedLevelIndex + 1;
+                        if (newIdx < 10 && Math.floor(newIdx / LEVEL_COLS) === Math.floor(selectedLevelIndex / LEVEL_COLS)) {
+                            focusLevelButton(newIdx);
+                        }
+                        return;
+                    }
+                    if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault();
+                        selectLevel(selectedLevelIndex + 1);
+                        return;
+                    }
+                    if (e.key === 'Escape') {
+                        e.preventDefault();
+                        // If there's an active game behind, resume it
+                        if (player && lives > 0 && !gameOver) {
+                            levelSelectOverlay.classList.remove('active');
+                            gamePaused = false;
+                            // Clear focus
+                            const buttons = levelGrid.querySelectorAll('.level-btn');
+                            buttons.forEach(b => b.classList.remove('focused'));
+                        }
+                        return;
+                    }
+                    return;
                 }
 
-                // Prevent scrolling
+                keys[e.key] = true;
+
+                // Pause toggle: ESC or P
+                if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+                    if (!levelSelectOverlay.classList.contains('active')) {
+                        togglePause();
+                    }
+                    e.preventDefault();
+                    return;
+                }
+
+                // Restart or back to menu
+                if (e.key === 'r' || e.key === 'R') {
+                    if (gameOver) {
+                        showLevelSelect();
+                    } else {
+                        restartGame();
+                    }
+                    e.preventDefault();
+                    return;
+                }
+
+                // Prevent scrolling for game keys
                 if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
                     e.preventDefault();
                 }
@@ -1184,12 +1634,67 @@
                 origUpdate();
             };
 
-            // Start game
-            initGame();
+            // Build level select grid
+            function buildLevelGrid() {
+                levelGrid.innerHTML = '';
+                for (let i = 0; i < 10; i++) {
+                    const cfg = LEVEL_CONFIG[i];
+                    const btn = document.createElement('button');
+                    btn.className = 'level-btn';
+                    // Difficulty class
+                    if (i < 3) btn.classList.add('easy');
+                    else if (i < 6) btn.classList.add('medium');
+                    else if (i < 8) btn.classList.add('hard');
+                    else btn.classList.add('expert');
+
+                    btn.innerHTML = `<span class="lv-num">${i + 1}</span><span class="lv-name">${cfg.name}</span>`;
+                    btn.addEventListener('click', () => selectLevel(i + 1));
+                    levelGrid.appendChild(btn);
+                }
+            }
+
+            function showLevelSelect() {
+                gamePaused = true;
+                gameOverOverlay.classList.remove('active');
+                pauseOverlay.classList.remove('active');
+                levelSelectOverlay.classList.add('active');
+                selectedLevelIndex = 0;
+                // Focus first button after a tick (dom needs to be visible)
+                setTimeout(() => focusLevelButton(0), 50);
+            }
+
+            function togglePause() {
+                if (gameOver) return;
+                if (levelSelectOverlay.classList.contains('active')) return;
+                gamePaused = !gamePaused;
+                if (gamePaused) {
+                    pauseOverlay.classList.add('active');
+                } else {
+                    pauseOverlay.classList.remove('active');
+                }
+            }
+
+            buildLevelGrid();
+            showLevelSelect();
             gameLoop();
 
-            // Expose restart to global scope
+            // Button handlers
+            selectLevelBtn.addEventListener('click', () => showLevelSelect());
+            pauseBtn.addEventListener('click', () => togglePause());
+            restartBtn.addEventListener('click', () => restartGame());
+
+            // Also show level select after game over via overlay click
+            gameOverOverlay.addEventListener('click', () => {
+                if (gameOver) showLevelSelect();
+            });
+
+            // Click pause overlay to unpause
+            pauseOverlay.addEventListener('click', () => togglePause());
+
+            // Expose functions to global scope
             window.restartGame = restartGame;
+            window.selectLevel = selectLevel;
+            window.togglePause = togglePause;
 
             console.log('🎮 坦克大战已就绪!');
             console.log('操作: 方向键移动, 空格射击, R键重新开始');
